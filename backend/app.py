@@ -101,11 +101,6 @@ class ArticleAPI(Resource):
             type: string
             required: false
             description : The end date for the articles (ISO 8601).
-          - name: n_sentences
-            in: query
-            type: string
-            required: false
-            description : The number of most important sentences per article used for the summary.
         responses:
           200:
              description: A list of articles.
@@ -121,14 +116,11 @@ class ArticleAPI(Resource):
             'start', default=None, location='args', type=str, required=False)
         argument5 = reqparse.Argument(
             'end', default=None, location='args', type=str, required=False)
-        argument6 = reqparse.Argument(
-            'n_sentences', default=3, location='args', type=int, required=False)
         parser.add_argument(argument1)
         parser.add_argument(argument2)
         parser.add_argument(argument3)
         parser.add_argument(argument4)
         parser.add_argument(argument5)
-        parser.add_argument(argument6)
         args = parser.parse_args()
         data = get_articles(
             articles_df, args['id'], args['journal'], args['title'], args['start'], args['end'], args['n_sentences'])
@@ -235,4 +227,4 @@ api.add_resource(MailAPI, '/mails')
 api.add_resource(MailNamesAPI, '/mails/names')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

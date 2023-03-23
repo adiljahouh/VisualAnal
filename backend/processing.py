@@ -1,4 +1,3 @@
-import torch
 import pandas as pd
 from textblob import TextBlob
 from sklearn.cluster import KMeans
@@ -35,9 +34,6 @@ def process(df, n_clusters=3, n_top=10, start=None, end=None):
     # Vectorize the content column using TF-IDF
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(df['content'])
-
-    # Convert the sparse matrix to a PyTorch tensor
-    X = torch.Tensor(X.toarray())
 
     # Perform k-means clustering
     kmeans = KMeans(n_clusters=n_clusters,
