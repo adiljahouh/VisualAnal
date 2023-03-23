@@ -70,6 +70,39 @@ def getTokens(DIRECTORY, tokenizer, stopwords):
     return dfTokensClean
 
 
+def preprocessMails(pathInputMails="data/emailheaders.csv", pathInputPersonal='data/EmployeeRecords.xlsx', pathOutput='data/MailsClean.csv'):
+    if not os.path.isfile(pathOutput):  # if we didnt preprocess mails yet
+        emailData = pd.read_csv(pathInputMails, encoding='cp1252')
+        # remove whitespaces, there are a lot in "To"
+        emailData['From'] = emailData['From'].str.strip()
+        # this is REALLY inefficient but we dont know how we want to preprocess everything yet..
+        personalData = pd.read_excel(
+            pathInputPersonal)[['EmailAddress', 'FirstName', 'LastName']]
+        personalData['FullName'] = personalData['FirstName'] + \
+            ' ' + personalData['LastName']
+        personalDataClean = personalData[['EmailAddress', 'FullName']]
+        nameToMailMapper = pd.Series(
+            personalDataClean.FullName.values, index=personalDataClean.EmailAddress).to_dict()  # mapper for names to mails
+        # this dude has 2 mails...
+        nameToMailMapper.pop("Sten.Sanjorge Jr.@gastech.com.kronos")
+        nameToMailMapper["Sten.Sanjorge Jr.@gastech.com.tethys"] = "Sten Sanjorge Jr. Tethys"
+        nameToMailMapper["Sten.Sanjorge Jr.@gastech.com.kronos"] = "Sten Sanjorge Jr. Kronos"
+        print(nameToMailMapper)
+        mappedMails = emailData.replace(
+            {'From': nameToMailMapper})
+        listifiedEmailData = mappedMails.assign(
+            To=mappedMails.To.str.split(','))
+        explodedEmailData = listifiedEmailData.explode(
+            'To').reset_index(drop=True)
+        explodedEmailData['To'] = explodedEmailData['To'].str.strip()
+        replacedTo = explodedEmailData.replace(
+            {'To': nameToMailMapper})
+        print(replacedTo.dtypes)
+        replacedTo['Date'] = pd.to_datetime(
+            replacedTo['Date'], format='%m/%d/%Y %H:%M')
+        replacedTo.to_csv(pathOutput, index=False)
+
+
 if __name__ == "__main__":
     print("preprocessing.py")
 
@@ -81,5 +114,7 @@ if __name__ == "__main__":
 
     dfArticlesDates = getArticlesDates(DIRECTORY=DIR)
     dfTokens = getTokens(DIR, word_tokenize, custom_stopwords)
-    print(dfTokens)
-    print(dfArticlesDates)
+    preprocessMails(pathInputMails="data/emailheaders.csv",
+                    pathInputPersonal='data/EmployeeRecords.xlsx', pathOutput='data/MailsClean.csv')
+    # print(dfTokens)
+    # print(dfArticlesDates)

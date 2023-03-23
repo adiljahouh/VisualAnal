@@ -1,42 +1,30 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 import pandas as pd
 import json
+import os.path
+from Preprocessing import preprocessMails
+from flask_cors import CORS
 app = Flask(__name__)
-
+CORS(app)
 # Sample data, full preprocessing of dataframe should be done once in preprocesing.py
 
 
-def preprocessMailData(sampleSize=100, From=['Sven Flecha'], width=4, data=None, blacklist=[]):
-    emailData = pd.read_csv('data/emailheaders.csv', encoding='cp1252')
-    # remove whitespaces, there are a lot in "To"
-    emailData['From'] = emailData['From'].str.strip()
-    # this is REALLY inefficient but we dont know how we want to preprocess everything yet..
-    personalData = pd.read_excel(
-        'data/EmployeeRecords.xlsx')[['EmailAddress', 'FirstName', 'LastName']]
-    personalData['FullName'] = personalData['FirstName'] + \
-        ' ' + personalData['LastName']
-    personalDataClean = personalData[['EmailAddress', 'FullName']]
-    nameToMailMapper = pd.Series(
-        personalDataClean.FullName.values, index=personalDataClean.EmailAddress).to_dict()
-    mappedMails = emailData.replace(
-        {'From': nameToMailMapper})
-    subset = mappedMails[mappedMails['From'].isin(From)]
-    if subset.empty:
-        print(
-            f"Stopped at width {width} because no data was found for mailers {From}")
-        return [['From', 'To', 'Weight']] + data
-    sample = subset.sample(sampleSize)
-    # get every specific recipient as a separate row
-    listifiedEmailData = sample.assign(To=sample.To.str.split(','))
-    explodedEmailData = listifiedEmailData.explode('To').reset_index(drop=True)
-    explodedEmailData['To'] = explodedEmailData['To'].str.strip()
-    replacedTo = explodedEmailData.replace(
-        {'To': nameToMailMapper})
-    # remove the mails that were sent from and to the same person
-    removedCycle = replacedTo[replacedTo['From']
-                              != replacedTo['To']]
+def filterMails(weight=10, From=['Sven Flecha'], width=4, data=None, blacklist=[], dateStart='2014-01-06', dateEnd='2014-01-17'):
+    """
+        returns a list of lists, where the mails sent from the people in the From list are filtered by weight and are all between
+        startDate and endDate. Note that the only goal of this visualization is to show frequency of mails sent between people within a timezone
+    """
+    emailData = pd.read_csv('data/MailsClean.csv')
+    emailData['Date'] = pd.to_datetime(
+        emailData['Date'], format='%Y/%m/%d %H:%M:%S')
+    subset = emailData[emailData['From'].isin(From)]
+    subset = subset[subset['Date'] >= dateStart]
+    subset = subset[subset['Date'] <= dateEnd]
+    removedCycle = subset[subset['From']
+                          != subset['To']]
     sankeyFormatDf = removedCycle.groupby(
         ['From', 'To'], as_index=False)['Subject'].count()
+    sankeyFormatDf = sankeyFormatDf[sankeyFormatDf['Subject'] > weight]
     sankeyFormatDf.rename(columns={'Subject': 'Weight'}, inplace=True)
     # sankeyFormatDf = sankeyFormatDf[sankeyFormatDf['Weight'] > 5]
     newBlackList = sankeyFormatDf['From'].unique().tolist() + blacklist
@@ -46,8 +34,8 @@ def preprocessMailData(sampleSize=100, From=['Sven Flecha'], width=4, data=None,
     if data is not None:
         valuesList = data + valuesList
     if width > 0:
-        valuesList = preprocessMailData(
-            sampleSize, sankeyFormatDf['To'].unique(), width-1, valuesList, blacklist=newBlackList)
+        valuesList = filterMails(
+            weight, sankeyFormatDf['To'].unique(), width-1, valuesList, blacklist=newBlackList)
         return valuesList
     else:
         columnsList = sankeyFormatDf.columns.values.tolist()
@@ -57,15 +45,22 @@ def preprocessMailData(sampleSize=100, From=['Sven Flecha'], width=4, data=None,
     # TODO: sort in weight or something
 
 
-sankeyData = preprocessMailData(
-    sampleSize=10, From=['Kanon Herrero', 'Sven Flecha'], width=3)
-# Route for creating a new task
-
-
-@app.route('/api/Sankey', methods=['GET'])
-def create_task():
+@app.route('/api/Sankey/<sender>/<int:weight>/<int:width>/<dateStart>/<dateEnd>', methods=['GET'])
+def getSankeyData(sender, weight, width, dateStart, dateEnd):
+    print(sender, weight, width, dateStart, dateEnd)
+    sender = sender.replace('-', ' ')
+    sankeyData = filterMails(
+        weight=weight, From=[sender], width=width, dateStart=dateStart, dateEnd=dateEnd)
     return json.dumps(sankeyData), 201
 
 
+@app.route('/api/Sankey/names', methods=['GET'])
+def getNames():
+    emailData = pd.read_csv('data/MailsClean.csv')
+    names = emailData['From'].unique().tolist()
+    return json.dumps(names), 201
+
+
 if __name__ == '__main__':
+    preprocessMails()  # creates mailsClean.csv in /data/ directory if not exists
     app.run(debug=True)

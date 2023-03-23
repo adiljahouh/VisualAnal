@@ -1,11 +1,15 @@
-import "./App.css";
 import React from "react";
-import Sankey from "./Sankey.tsx";
-
+import Header from "./header.js";
+import { DateContextProvider } from "./Treemap/Context/DateContext/DateContext.js";
+// EXAMPLE DATA, in real app it should pass it as a prop?
 function App() {
   return (
     <div className="App">
-      <Sankey />
+      <div>
+        <DateContextProvider>
+          <Header />
+        </DateContextProvider>
+      </div>
     </div>
   );
 }
