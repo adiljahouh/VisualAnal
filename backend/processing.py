@@ -7,19 +7,21 @@ from nltk.tokenize import sent_tokenize
 
 
 def initialize_data():
-    df = pd.read_csv('results/articles_cleaned.csv')
-    df['date'] = pd.to_datetime(df['date'], errors='coerce')
-    df.dropna(inplace=True)
-    df['id'] = df.index + 1
+    articles_df = pd.read_csv('results/articles_clean.csv')
+    articles_df['date'] = pd.to_datetime(articles_df['date'], errors='coerce')
+    articles_df.dropna(inplace=True)
+    articles_df['id'] = articles_df.index + 1
 
     # Calculate sentiment scores using TextBlob
     sentiment_scores = []
-    for content in df['content']:
+    for content in articles_df['content']:
         blob = TextBlob(content)
         sentiment_scores.append(blob.sentiment.polarity)
-    df['sentiment_score'] = sentiment_scores
+    articles_df['sentiment_score'] = sentiment_scores
 
-    return df
+    mails_df = pd.read_csv('results/mails_clean.csv')
+
+    return articles_df, mails_df
 
 
 def process(df, n_clusters=3, n_top=10, start=None, end=None):
@@ -162,3 +164,52 @@ def get_articles(df, id=None, journal=None, title=None, start=None, end=None, n_
         results.append(result)
 
     return results
+
+
+def filter_mails(df, weight=10, sender=['Sven Flecha'], width=4, data=None,
+                 blacklist=[], start=None, end=None):
+    """
+    Returns a list of lists, where the mails sent from the people in the sender list are filtered by weight and are all between
+    start_date and end_date. Note that the only goal of this visualization is to show frequency of mails sent between people within a timezone.
+    """
+    if start != None:
+        ts = pd.to_datetime(start).to_numpy()
+        df = df[df['Date'] >= ts]
+    if end != None:
+        ts = pd.to_datetime(end).to_numpy()
+        df = df[df['Date'] <= ts]
+    subset = df[df['From'].isin(sender)]
+    removed_cycle = subset[subset['From'] != subset['To']]
+    sankey_format_df = removed_cycle.groupby(
+        ['From', 'To'], as_index=False)['Subject'].count()
+    sankey_format_df = sankey_format_df[sankey_format_df['Subject'] > weight]
+    sankey_format_df.rename(columns={'Subject': 'Weight'}, inplace=True)
+
+    new_blacklist = sankey_format_df['From'].unique().tolist() + blacklist
+    sankey_format_df = sankey_format_df[~sankey_format_df['To'].isin(
+        new_blacklist)]
+
+    values_list = sankey_format_df.values.tolist()
+
+    if data is not None:
+        values_list = data + values_list
+
+    if width > 0:
+        values_list = filter_mails(df=df, weight=weight, sender=sankey_format_df['To'].unique(), width=width-1,
+                                   data=values_list, blacklist=new_blacklist, start=start, end=end)
+        return values_list
+    else:
+        columns_list = sankey_format_df.columns.values.tolist()
+        values_list = [columns_list] + values_list
+        return values_list
+
+
+def get_mail_names(df, start=None, end=None):
+    if start != None:
+        ts = pd.to_datetime(start).to_numpy()
+        df = df[df['Date'] >= ts]
+    if end != None:
+        ts = pd.to_datetime(end).to_numpy()
+        df = df[df['Date'] <= ts]
+
+    return df['From'].unique().tolist()
