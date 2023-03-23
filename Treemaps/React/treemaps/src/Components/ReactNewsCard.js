@@ -78,16 +78,21 @@ const ReactNewsCard = ({ cluster, sentimentRange }) => {
 
     const { newsModalData } = useContext(ApiDataContext);
     const { startDate, endDate } = useContext(DateContext);
+
+    let shownArticles = 0;
   
     const cardNodes = newsModalData[cluster].map((article, index) => {
 
-      if (index > 3) {
+      if (shownArticles >= 3) {
         return;
         //Don't render articles with sentiment score outside of the range or date outside of the range
       } else if (article.sentiment_score < sentimentRange[0]/100 || article.sentiment_score > sentimentRange[1]/100
               || article.date < startDate.toDate() || article.date > endDate.toDate()) {
         return;
       } else {
+
+        shownArticles += 1;
+
         return (
           <Suspense key={index} fallback={<div>Loading...</div>}>
             <Card articleId={article.id} />

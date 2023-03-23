@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { ApiDataContext } from '../Context/ApiDataContext/ApiDataContext';
 import '../App.css';
 
-const Counter = () => {
+const Counter = (  ) => {
 
     const { treemapData, new_cluster_data } = useContext(ApiDataContext);
 
@@ -33,7 +33,9 @@ const Counter = () => {
         <span>Number of clusters: {count}</span>
         <button onClick={increment}>+</button>
         </div>
-    );
+        );
+    
+    
     };
 
 export default Counter;
