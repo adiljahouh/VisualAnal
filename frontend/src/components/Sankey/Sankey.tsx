@@ -82,6 +82,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
 
   handleNameChange = (event: SelectChangeEvent<string>) => {
     this.setState({ selectedName: event.target.value });
+    this.fetchSankeyMailData()
   };
 
   handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,6 +91,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       // Handle error case where value is not an integer
     } else {
       this.setState({ selectedWidth: value });
+      this.fetchSankeyMailData()
     }
   };
 
@@ -99,6 +101,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       // Handle error case where value is not an integer
     } else {
       this.setState({ selectedWeight: value });
+      this.fetchSankeyMailData()
     }
   };
 
