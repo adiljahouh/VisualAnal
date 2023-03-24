@@ -19,6 +19,9 @@ def initialize_data():
     articles_df['sentiment_score'] = sentiment_scores
 
     mails_df = pd.read_csv('results/mails_clean.csv')
+    mails_df['Date'] = pd.to_datetime(mails_df['Date'], errors='coerce')
+    mails_df.dropna(inplace=True)
+    mails_df['id'] = mails_df.index + 1
 
     return articles_df, mails_df
 
