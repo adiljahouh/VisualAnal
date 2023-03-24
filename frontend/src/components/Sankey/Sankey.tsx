@@ -74,12 +74,6 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
     this.fetchSankeyMailData()
   }
 
-  componentDidUpdate(prevProps: SankeyProps) {
-    if (prevProps.date !== this.props.date) {
-      // Fetch new data from API based on updated date range and set sankeyData state
-    }
-  }
-
   handleNameChange = (event: SelectChangeEvent<string>) => {
     this.setState({ selectedName: event.target.value });
     this.fetchSankeyMailData()
