@@ -91,18 +91,21 @@ function DashboardContent() {
     setSelectedMenu(menuItem);
   };
 
+  // Content through the navigation pane goes here.
   const renderContent = () => {
     switch (selectedMenu) {
       case 'TreeMap':
         return (
           <div>
+            <NewDateRangePicker/>
             <h1>TreeMap</h1>
-            <p>This is the Dashboard content.</p>
+            <TreemapContainer />
           </div>
         );
       case 'Sankey':
         return (
           <div>
+            <NewDateRangePicker/>
             <h1>Sankey</h1>
             <Sankey
               date={{
@@ -114,8 +117,9 @@ function DashboardContent() {
       default:
         return (
           <div>
+            <NewDateRangePicker/>
             <h1>TreeMap</h1>
-            <p>This is the Dashboard content.</p>
+            <TreemapContainer />
           </div>
         );
     }
