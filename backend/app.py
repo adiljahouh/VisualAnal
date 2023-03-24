@@ -123,7 +123,7 @@ class ArticleAPI(Resource):
         parser.add_argument(argument5)
         args = parser.parse_args()
         data = get_articles(
-            articles_df, args['id'], args['journal'], args['title'], args['start'], args['end'], args['n_sentences'])
+            articles_df, args['id'], args['journal'], args['title'], args['start'], args['end'])
         return jsonify(data)
 
 

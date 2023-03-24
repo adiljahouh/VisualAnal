@@ -131,7 +131,7 @@ def score_words(content):
     return scored_tokens
 
 
-def get_articles(df, id=None, journal=None, title=None, start=None, end=None, n_sentences=3):
+def get_articles(df, id=None, journal=None, title=None, start=None, end=None):
     if id != None:
         df = df[df['id'] == id]
     if journal != None:
@@ -154,7 +154,6 @@ def get_articles(df, id=None, journal=None, title=None, start=None, end=None, n_
             'date': row['date'],
             'content': row['content'],
             'sentiment_score': row['sentiment_score'],
-            # 'summary': summarize_text(row['content'], n_sentences),
             'word_scores': score_words(row['content'])
         }
         results.append(result)
