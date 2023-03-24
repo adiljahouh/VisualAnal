@@ -10,10 +10,21 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems } from './listItems';
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemButton from '@mui/material/ListItemButton'
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+
+// Tree Map
+import { DateContextProvider } from '../Treemap/Context/DateContext/DateContext';
+import TreemapContainer from "../Treemap/Components/TreemapContainer";
+import NewDateRangePicker from "../Treemap/Components/NewDateRange";
+import { DateContext } from "../Treemap/Context/DateContext/DateContext";
+import Sankey from "../Sankey/Sankey";
+import { useContext } from "react";
 
 const drawerWidth: number = 240;
 
@@ -69,8 +80,45 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
+  const [selectedMenu, setSelectedMenu] = React.useState('Dashboard'); // Default selected menu item
+  const { startDate, endDate } = useContext(DateContext);
+
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const handleMenuClick = (menuItem: any) => {
+    setSelectedMenu(menuItem);
+  };
+
+  const renderContent = () => {
+    switch (selectedMenu) {
+      case 'TreeMap':
+        return (
+          <div>
+            <h1>TreeMap</h1>
+            <p>This is the Dashboard content.</p>
+          </div>
+        );
+      case 'Sankey':
+        return (
+          <div>
+            <h1>Sankey</h1>
+            <Sankey
+              date={{
+                start: startDate.format("YYYY-MM-DD"),
+                end: endDate.format("YYYY-MM-DD"),
+              }} />
+          </div>
+        );
+      default:
+        return (
+          <div>
+            <h1>TreeMap</h1>
+            <p>This is the Dashboard content.</p>
+          </div>
+        );
+    }
   };
 
   return (
@@ -121,7 +169,18 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <ListItemButton onClick={() => handleMenuClick('TreeMap')} selected={selectedMenu === 'TreeMap'}>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="TreeMap" />
+            </ListItemButton>
+            <ListItemButton onClick={() => handleMenuClick('Sankey')} selected={selectedMenu === 'Sankey'}>
+              <ListItemIcon>
+                <ShowChartIcon />
+              </ListItemIcon>
+              <ListItemText primary="Sankey" />
+            </ListItemButton>
           </List>
         </Drawer>
         <Box
@@ -138,8 +197,7 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-            </Grid>
+            {renderContent()}
           </Container>
         </Box>
       </Box>

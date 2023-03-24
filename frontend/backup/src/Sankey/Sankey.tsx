@@ -3,6 +3,14 @@ import { Chart } from "react-google-charts";
 import FormControl from "@mui/material/FormControl";
 import { MenuItem, Select, InputLabel, SelectChangeEvent } from "@mui/material";
 // import Dropdown from "react-bootstrap/Dropdown";
+
+interface SankeyProps {
+  date: {
+    start: string,
+    end: string,
+  }
+}
+
 export class Sankey extends Component {
   constructor(props) {
     super(props);

@@ -164,7 +164,7 @@ class MailAPI(Resource):
         """
         parser = reqparse.RequestParser()
         argument1 = reqparse.Argument(
-            'sender', default='Sven Flecha', location='args', type=int, required=False)
+            'sender', default='Sven Flecha', location='args', type=str, required=False)
         argument2 = reqparse.Argument(
             'weight', default=10, location='args', type=int, required=False)
         argument3 = reqparse.Argument(
@@ -227,4 +227,4 @@ api.add_resource(MailAPI, '/mails')
 api.add_resource(MailNamesAPI, '/mails/names')
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
