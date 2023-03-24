@@ -1,0 +1,11 @@
+ Clustering methods   
+    
+K-Means clustering: This is a widely used unsupervised learning algorithm that partitions data points into a pre-defined number 
+of clusters based on their similarity. In this case, you could cluster the articles based on the similarity of their content or title.
+
+Hierarchical clustering: This clustering method creates a hierarchy of clusters by iteratively merging or splitting clusters based on
+    their similarity. This can be useful if you want to create a visual representation of the relationships between the articles.
+
+Density-based clustering: This clustering method identifies clusters based on the density of data points in a given area. It can be useful if you want to identify clusters of articles that are closely related in time.
+
+Topic modeling: This clustering method uses natural language processing (NLP) techniques to identify the underlying topics in a collection of articles. This can be useful if you want to group articles based on their topics or themes.
