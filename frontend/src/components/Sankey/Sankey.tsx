@@ -9,6 +9,7 @@ import {
   Input,
   Grid, Typography, CircularProgress,
 } from "@mui/material";
+import moment from 'moment';
 
 interface SankeyProps {
   date: {
@@ -31,6 +32,8 @@ interface QueryParamsMail {
   sender: string;
   weight: number;
   width: number;
+  start: string;
+  end: string;
 }
 
 class SankeyChart extends Component<SankeyProps, SankeyState> {
@@ -54,6 +57,8 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       sender: this.state.selectedName,
       weight: this.state.selectedWeight,
       width: this.state.selectedWidth,
+      start: moment(this.props.date.start).toISOString(),
+      end: moment(this.props.date.end).toISOString(),
     }
 
     const url = 'http://localhost:5000/mails?' + Object.keys(queryParams)
