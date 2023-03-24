@@ -128,6 +128,13 @@ def score_words(content):
     # Score each token based on its TF-IDF score
     scored_tokens = [(w, scored_words.get(w.lower(), 0)) for w in tokens]
 
+    # Score each token based on its TF-IDF score and sentiment
+    scored_tokens = []
+    for w in tokens:
+        tfidf_score = scored_words.get(w.lower(), 0)
+        sentiment = TextBlob(w).sentiment.polarity
+        scored_tokens.append({'word': w, 'tfidf_score': tfidf_score, 'sentiment': sentiment})
+
     return scored_tokens
 
 
