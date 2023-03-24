@@ -4,11 +4,12 @@ import Stack from '@mui/material/Stack';
 import Slider from '@mui/material/Slider';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import { Button } from '@mui/material';
 
 function valuetext(value) {
   return `${value}`;
 }
-export default function SentimentSlider( {sentimentRange, setSentimentRange} ) {
+export default function SentimentSlider( {sentimentRange, setSentimentRange, handleApply} ) {
 
     const handleChange = (event, newValue) => {
       setSentimentRange(newValue);
@@ -42,6 +43,7 @@ export default function SentimentSlider( {sentimentRange, setSentimentRange} ) {
                     </Box>
                     <SentimentSatisfiedAltIcon/>
                 </Stack>
+                <Button  variant='contained' onClick={() => handleApply()}>Apply</Button>
             </Stack>
         </div>
     );

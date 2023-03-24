@@ -14,7 +14,12 @@ open: boolean. If true -> modal is being shown. If false it's not.
 setOpen: function. If called with (false) -> modal is closed.
 cluster: cluster_id specifying which cluster to show articles from
 */
-  const [sentimentRange, setSentimentRange] = useState([30, 67]);
+  const [sentimentSliderRange, setSentimentSliderRange] = useState([30, 67]);
+  const [newsSentimentRange, setNewsSentimentRange] = useState(sentimentSliderRange);
+
+  const handleApply = () => {
+    setNewsSentimentRange(sentimentSliderRange);
+  };
 
   return (
     <Popup
@@ -24,8 +29,9 @@ cluster: cluster_id specifying which cluster to show articles from
     >
       <Stack direction="row" spacing={1} alignItems="center">
         <SentimentSlider
-          sentimentRange={sentimentRange}
-          setSentimentRange={setSentimentRange}
+          sentimentRange={sentimentSliderRange}
+          setSentimentRange={setSentimentSliderRange}
+          handleApply={handleApply}
         />
         <div />
         <div />
@@ -33,7 +39,7 @@ cluster: cluster_id specifying which cluster to show articles from
         <div />
         <button className="close-button" onClick={() => setOpen(false)} />
       </Stack>
-      <ReactNewsCard cluster={cluster} sentimentRange={sentimentRange} />
+      <ReactNewsCard cluster={cluster} sentimentRange={newsSentimentRange} />
     </Popup>
   );
 };
