@@ -21,7 +21,7 @@ export const ApiDataContextProvider = ({ children }) => {
     const new_cluster_data = async (n_clusters = 3, n_top = 10, start = null, end = null) => {
 
         // Prepare the url
-        let url = `https://web-production-8f6d.up.railway.app/clusters?n_clusters=${n_clusters}&n_top=${n_top}`;
+        let url = `http://127.0.0.1:5000/clusters?n_clusters=${n_clusters}&n_top=${n_top}`;
         if (start !== null && end !== null) {
             url += `&start=${start.toISOString()}&end=${end.toISOString()}`;
         }

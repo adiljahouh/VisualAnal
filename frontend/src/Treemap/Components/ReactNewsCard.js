@@ -13,7 +13,7 @@ const Card = ({ articleId }) => {
       redirect: 'follow'
     };
 
-    fetch(`https://web-production-8f6d.up.railway.app/articles?id=${articleId}`, requestOptions)
+    fetch(`http://127.0.0.1:5000/articles?id=${articleId}`, requestOptions)
       .then(response => response.json())
       .then(data => {
         setArticleData(data[0]);

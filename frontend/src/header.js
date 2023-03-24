@@ -1,11 +1,10 @@
 import React from "react";
 import Sankey from "./Sankey/Sankey.tsx";
-import moment from "moment";
 import { useState } from "react";
-import DateRange from "./Treemap/Components/DateRange.js";
 import { DateContext } from "./Treemap/Context/DateContext/DateContext.js";
 import { useContext } from "react";
 import TreemapContainer from "./Treemap/Components/TreemapContainer.js";
+import NewDateRangePicker from "./Treemap/Components/NewDateRange";
 
 const ComponentC = () => {
   return <h1>Component C</h1>;
@@ -30,8 +29,8 @@ const Header = () => {
           <option value="TreeMapContainer">Tree Map</option>
           <option value="componentC">Component c</option>
         </select>
-      </nav>
-      <DateRange />
+      </nav>      
+      <NewDateRangePicker/>
       {selectedComponent === "componentSankey" && (
         <Sankey
           date={{
