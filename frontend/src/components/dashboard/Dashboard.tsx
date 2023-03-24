@@ -19,10 +19,9 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
 // Tree Map
-import { DateContextProvider } from '../Treemap/Context/DateContext/DateContext';
+import { DateContext } from '../Treemap/Context/DateContext/DateContext';
 import TreemapContainer from "../Treemap/Components/TreemapContainer";
 import NewDateRangePicker from "../Treemap/Components/NewDateRange";
-import { DateContext } from "../Treemap/Context/DateContext/DateContext";
 import Sankey from "../Sankey/Sankey";
 import { useContext } from "react";
 
@@ -97,7 +96,6 @@ function DashboardContent() {
       case 'TreeMap':
         return (
           <div>
-            <NewDateRangePicker/>
             <h1>TreeMap</h1>
             <TreemapContainer />
           </div>
@@ -105,7 +103,6 @@ function DashboardContent() {
       case 'Sankey':
         return (
           <div>
-            <NewDateRangePicker/>
             <h1>Sankey</h1>
             <Sankey
               date={{
@@ -117,7 +114,6 @@ function DashboardContent() {
       default:
         return (
           <div>
-            <NewDateRangePicker/>
             <h1>TreeMap</h1>
             <TreemapContainer />
           </div>
@@ -201,7 +197,8 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {renderContent()}
+              <NewDateRangePicker/>
+              {renderContent()}
           </Container>
         </Box>
       </Box>

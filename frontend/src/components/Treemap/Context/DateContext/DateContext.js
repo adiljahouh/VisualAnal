@@ -19,6 +19,7 @@ export const DateContextProvider = ({ children }) => {
   // Define all functions that can be passed down to children
   const set_new_date = (start, end) => {
     // console.log(start, end);
+    console.log('Triggerd set_new_date');
     dispatch({
       type: "SET_NEW_DATES",
       startDate: start,

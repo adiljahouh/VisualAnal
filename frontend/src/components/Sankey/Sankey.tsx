@@ -70,13 +70,32 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       .then((data) => this.setState({ sankeyData: data, fetchingAPI: false }));
   }
 
+  fetchSankeyMailNames() {
+    const queryParams: { [key: string]: string | number; start: string, end: string } = {
+      start: moment(this.props.date.start).toISOString(),
+      end: moment(this.props.date.end).toISOString(),
+    }
+
+    const url = 'http://localhost:5000/mails/names?' + Object.keys(queryParams)
+      .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]))
+      .join('&');
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => this.setState({ names: data }));
+  }
+
   componentDidMount() {
     // Fetch data from API based on date range and set sankeyData state
-    fetch("http://localhost:5000/mails/names")
-      .then((response) => response.json())
-      .then((data) => this.setState({ names: data }));
+    this.fetchSankeyMailNames();
+    this.fetchSankeyMailData();
+  }
 
-    this.fetchSankeyMailData()
+  componentDidUpdate(prevProps: SankeyProps) {
+    if (prevProps.date !== this.props.date) {
+      this.fetchSankeyMailNames();
+      this.fetchSankeyMailData();
+    }
   }
 
   handleNameChange = (event: SelectChangeEvent<string>) => {
@@ -178,7 +197,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
         ) : (
           <Grid item xs={12}>
             <Grid container justifyContent="center" alignContent="center">
-              {this.state.sankeyData.length ? (
+              {this.state.sankeyData && this.state.sankeyData.length > 1 ? (
                 <Chart
                   chartType="Sankey"
                   data={this.state.sankeyData}
