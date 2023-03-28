@@ -126,6 +126,35 @@ class ArticleAPI(Resource):
             articles_df, args['id'], args['journal'], args['title'], args['start'], args['end'])
         return jsonify(data)
 
+    def post(self):
+        """
+        Filter articles by ID.
+        ---
+        requestBody:
+          description: List of IDs to filter by.
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ids:
+                    type: array
+                    items:
+                      type: integer
+        responses:
+          200:
+            description: List of filtered articles.
+        """
+        parser = reqparse.RequestParser()
+        argument1 = reqparse.Argument(
+            'ids', required=True, location='json', type=list,
+            help='List of IDs is required')
+        parser.add_argument(argument1)
+        args = parser.parse_args()
+        data = get_articles(articles_df, ids=args['ids'])
+        return jsonify(data)
+
 
 class MailAPI(Resource):
     def get(self):

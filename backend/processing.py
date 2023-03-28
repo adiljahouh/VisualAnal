@@ -136,24 +136,29 @@ def score_words(content):
     for w in tokens:
         tfidf_score = scored_words.get(w.lower(), 0)
         sentiment = TextBlob(w).sentiment.polarity
-        scored_tokens.append({'word': w, 'tfidf_score': tfidf_score, 'sentiment': sentiment})
+        scored_tokens.append(
+            {'word': w, 'tfidf_score': tfidf_score, 'sentiment': sentiment})
 
     return scored_tokens
 
 
-def get_articles(df, id=None, journal=None, title=None, start=None, end=None):
-    if id != None:
-        df = df[df['id'] == id]
-    if journal != None:
-        df = df[df['journal'].str.contains(journal)]
-    if title != None:
-        df = df[df['title'].str.contains(title)]
-    if start != None:
-        ts = pd.to_datetime(start).to_numpy()
-        df = df[df['date'] >= ts]
-    if end != None:
-        ts = pd.to_datetime(end).to_numpy()
-        df = df[df['date'] <= ts]
+def get_articles(df, id=None, journal=None, title=None, start=None, end=None, ids=None):
+    if ids != None:
+        df = df[df['id'].isin(ids)]
+        print('ids')
+    else:
+        if id != None:
+            df = df[df['id'] == id]
+        if journal != None:
+            df = df[df['journal'].str.contains(journal)]
+        if title != None:
+            df = df[df['title'].str.contains(title)]
+        if start != None:
+            ts = pd.to_datetime(start).to_numpy()
+            df = df[df['date'] >= ts]
+        if end != None:
+            ts = pd.to_datetime(end).to_numpy()
+            df = df[df['date'] <= ts]
 
     results = []
     for _, row in df.iterrows():
