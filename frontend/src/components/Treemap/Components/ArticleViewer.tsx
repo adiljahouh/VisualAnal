@@ -144,6 +144,18 @@ class ArticleViewer extends Component<ArticleViewerProps, ArticleViewerState> {
       }
     };
 
+    const formatArticleContent = (content: string, limit: number,
+      wordScores: WordScore[], wordScoreThreshold: number) => {
+      const words = content.substring(0, limit).split(" ");
+      return words.map((word, index) => {
+        const tfidfScore = wordScores[index]?.tfidf_score;
+        if (tfidfScore && tfidfScore > wordScoreThreshold) {
+          return <span key={index} style={{ fontWeight: "bold" }}>{word} </span>;
+        }
+        return `${word} `;
+      });
+    };
+
     return (
       <Grid container spacing={2}>
         {this.state.fetchingAPI ? (
@@ -171,28 +183,15 @@ class ArticleViewer extends Component<ArticleViewerProps, ArticleViewerState> {
                             subheader={article.journal}
                           />
                           <CardContent>
-                            <Typography variant="h5" component="h2" style={{ margin: "1rem 0" }}>
-                              {moment(article.date).format("ddd, DD MMM YYYY")}
-                            </Typography>
-                            <Typography color="textSecondary" style={{ margin: "0 0 1rem" }}>
-                              {article.journal}
-                            </Typography>
                             <Typography variant="body2" component="p" style={{ margin: "0" }}>
-                              {article.expanded ? article.content : article.content.substring(0, this.state.articleContentLimit)
-                                .split(" ")
-                                .map((word, index) => {
-                                  const tfidfScore = article.word_scores[index]?.tfidf_score;
-                                  if (tfidfScore && tfidfScore > this.state.word_score_treshold) {
-                                    return <span key={index} style={{ fontWeight: "bold" }}>{word} </span>;
-                                  }
-                                  return `${word} `;
-                                })}
+                              {article.expanded
+                                ? formatArticleContent(article.content, article.content.length, article.word_scores, this.state.word_score_treshold)
+                                : formatArticleContent(article.content, this.state.articleContentLimit, article.word_scores, this.state.word_score_treshold)}
                               {article.content.length > this.state.articleContentLimit && (
                                 <span
                                   style={{ color: "blue", cursor: "pointer" }}
                                   onClick={() => this.handleExpandContent(article)}
                                 >
-                                  {" "}
                                   {article.expanded ? "...Show less" : "...Show more"}
                                 </span>
                               )}
