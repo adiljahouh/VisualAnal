@@ -83,7 +83,7 @@ const ReactNewsCard = ({ cluster, sentimentRange }) => {
   
     const cardNodes = newsModalData[cluster].map((article, index) => {
 
-      if (shownArticles >= 3) {
+      if (shownArticles >= 4) {
         return;
         //Don't render articles with sentiment score outside of the range or date outside of the range
       } else if (article.sentiment_score < sentimentRange[0]/100 || article.sentiment_score > sentimentRange[1]/100

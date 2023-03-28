@@ -27,7 +27,7 @@ const TreemapContainer = () => {
         // over the Treemap when the news is showing        
         <React.Fragment>
             <ApiDataContextProvider>
-                <NewsModal open={openNews} setOpen={setOpenNews} cluster={newsClusterToShow}/>
+                {openNews ? <NewsModal setOpen={setOpenNews} cluster={newsClusterToShow}/> : null}
                 {openNews? null : <ClusterCounter open={openNews}/>}
                 <Treemap openNewsModal={openNewsModal} vague={openNews}/>
             </ApiDataContextProvider> 

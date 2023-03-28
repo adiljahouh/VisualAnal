@@ -11,6 +11,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
+  position: relative;
 }
 
 .close-button:hover {
@@ -29,15 +30,23 @@
   width: 2px;
   height: 12px;
   background-color: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .close-button::after {
   transform: rotate(45deg);
+  top: calc(50% - 1px); /* adjust for the position of the cross */
+  left: calc(50% - 1px); /* adjust for the position of the cross */
 }
 
 .close-button::before {
   transform: rotate(-45deg);
+  top: calc(50% - 1px); /* adjust for the position of the cross */
+  left: calc(50% - 1px); /* adjust for the position of the cross */
 }
+
 
 
 .cardContainer {
