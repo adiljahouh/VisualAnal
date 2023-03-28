@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import CancelIcon from '@mui/icons-material/Cancel';
 import "../react_news_cards.css";
-import ReactNewsCard from "./ReactNewsCard";
 import SentimentSlider from "./SentimentSlider";
 import Stack from "@mui/material/Stack";
 import IconButton from '@mui/material/IconButton';
-
+import { ApiDataContext } from '../Context/ApiDataContext/ApiDataContext';
+import ArticleViewer from "./ArticleViewer";
+import moment, { Moment } from "moment";
 
 const NewsModal = ({ setOpen, cluster }) => {
   /*
@@ -17,6 +18,10 @@ cluster: cluster_id specifying which cluster to show articles from
 */
   const [sentimentSliderRange, setSentimentSliderRange] = useState([30, 67]);
   const [newsSentimentRange, setNewsSentimentRange] = useState(sentimentSliderRange);
+  
+  // Get articles for specific cluster
+  const { newsModalData } = useContext(ApiDataContext);
+  const articles = newsModalData[cluster];
 
   const handleApply = () => {
     setNewsSentimentRange(sentimentSliderRange);
@@ -37,7 +42,7 @@ cluster: cluster_id specifying which cluster to show articles from
           <CancelIcon/>
         </IconButton>
       </Stack>
-      <ReactNewsCard cluster={cluster} sentimentRange={newsSentimentRange} />
+      <ArticleViewer articles={articles} sentimentRange={newsSentimentRange} />
     </Stack>
   );
 };
