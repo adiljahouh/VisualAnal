@@ -49,6 +49,7 @@ interface ArticleViewerState {
   articles: Article[]
   articleContentLimit: number;
   fetchingAPI: boolean;
+  word_score_treshold: number;
 }
 
 class ArticleViewer extends Component<ArticleViewerProps, ArticleViewerState> {
@@ -61,6 +62,7 @@ class ArticleViewer extends Component<ArticleViewerProps, ArticleViewerState> {
       articles: [],
       articleContentLimit: 500,
       fetchingAPI: true,
+      word_score_treshold: 0.25,
     };
   }
 
@@ -159,7 +161,9 @@ class ArticleViewer extends Component<ArticleViewerProps, ArticleViewerState> {
                     {displayedArticles.map((article) => (
                       <Grid item xs={12} sm={6} md={4} key={article.id}>
                         <Card style={{
-                          display: "flex", flexDirection: "column", height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          height: "100%",
                           background: sentimentColor(article.sentiment_score)
                         }}>
                           <CardHeader
@@ -174,7 +178,15 @@ class ArticleViewer extends Component<ArticleViewerProps, ArticleViewerState> {
                               {article.journal}
                             </Typography>
                             <Typography variant="body2" component="p" style={{ margin: "0" }}>
-                              {article.expanded ? article.content : article.content.substring(0, this.state.articleContentLimit)}
+                              {article.expanded ? article.content : article.content.substring(0, this.state.articleContentLimit)
+                                .split(" ")
+                                .map((word, index) => {
+                                  const tfidfScore = article.word_scores[index]?.tfidf_score;
+                                  if (tfidfScore && tfidfScore > this.state.word_score_treshold) {
+                                    return <span key={index} style={{ fontWeight: "bold" }}>{word} </span>;
+                                  }
+                                  return `${word} `;
+                                })}
                               {article.content.length > this.state.articleContentLimit && (
                                 <span
                                   style={{ color: "blue", cursor: "pointer" }}
