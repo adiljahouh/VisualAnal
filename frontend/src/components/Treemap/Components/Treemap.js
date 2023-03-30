@@ -68,7 +68,7 @@ vague: boolean. controls whether to set opacity to 0.0 or at 1.0
         labels: {
           value: {
             name: 'Importance',
-            formatter: (params) => `${params.datum.importance}`,
+            formatter: (params) => `${params.datum.importance.toFixed(3)}`,
           },
         },
         groupStrokeWidth: 0,
