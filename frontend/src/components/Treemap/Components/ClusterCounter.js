@@ -21,8 +21,10 @@ const Counter = () => {
   };
 
   const decrement = () => {
-    setCount(count - 1);
-    new_cluster_data(count - 1);
+    if (count > 1) {
+      setCount(count - 1);
+      new_cluster_data(count - 1);
+    }
   };
 
   return (
