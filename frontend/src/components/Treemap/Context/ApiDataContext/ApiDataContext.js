@@ -18,7 +18,7 @@ export const ApiDataContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(ApiDataReducer, initial_state);
 
     // Define all functions that can be passed down to children
-    const new_cluster_data = async (n_clusters = 3, n_top = 10, start = null, end = null) => {
+    const new_cluster_data = async (n_clusters = 4, n_top = 10, start = null, end = null) => {
 
         // Prepare the url
         let url = `http://127.0.0.1:5000/clusters?n_clusters=${n_clusters}&n_top=${n_top}`;
