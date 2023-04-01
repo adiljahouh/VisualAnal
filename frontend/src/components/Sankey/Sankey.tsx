@@ -108,18 +108,20 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
     if (isNaN(value)) {
       // Handle error case where value is not an integer
     } else {
-      this.setState({ selectedWidth: value });
-      this.fetchSankeyMailData()
+      this.setState({ selectedWidth: value }, () => {
+        this.fetchSankeyMailData();
+      });
     }
   };
 
   handleWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value, 2)
+    const value = parseInt(event.target.value, 10)
     if (isNaN(value)) {
       // Handle error case where value is not an integer
     } else {
-      this.setState({ selectedWeight: value });
-      this.fetchSankeyMailData()
+      this.setState({ selectedWeight: value }, () => {
+        this.fetchSankeyMailData();
+      });
     }
   };
 
@@ -170,7 +172,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
               type="number"
               value={this.state.selectedWidth.toString()}
               onChange={this.handleWidthChange}
-              inputProps={{ min: 1, max: 20 }}
+              inputProps={{ min: 1, max: 20, step: 1 }}
             />
           </FormControl>
         </Grid>
@@ -183,7 +185,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
               type="number"
               value={this.state.selectedWeight.toString()}
               onChange={this.handleWeightChange}
-              inputProps={{ min: 1, max: 20 }}
+              inputProps={{ min: 1, max: 20, step: 1 }}
             />
           </FormControl>
         </Grid>
