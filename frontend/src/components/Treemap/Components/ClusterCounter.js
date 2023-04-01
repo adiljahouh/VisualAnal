@@ -10,7 +10,7 @@ const Counter = () => {
   try {
     const num_clusters = treemapData.children.length;
   } catch (err) {
-    const num_clusters = 3;
+    const num_clusters = 4;
   }
 
   const [count, setCount] = useState(num_clusters);
