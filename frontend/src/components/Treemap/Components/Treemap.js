@@ -3,6 +3,8 @@ import { AgChartsReact } from 'ag-charts-react';
 import { ApiDataContext } from '../Context/ApiDataContext/ApiDataContext';
 
 const Treemap = ( { openNewsModal, vague } ) => {
+    const [ready, setReady] = useState(false);
+    const [options, setOptions] = useState(null);
 /*
 Component responsible for the Treemap.
 
@@ -34,78 +36,75 @@ vague: boolean. controls whether to set opacity to 0.0 or at 1.0
     if (treemapData.children) {
       setClusterColors(getRandomColors(treemapData.children.length));
     }
-  }, [treemapData]);
-
-  // Options to set for the treemap
-  const options = {
-    data: treemapData,    
-    series: [
-      {
-        type: 'treemap',
-        labelKey: 'word',
-
-        listeners: {
-              nodeClick: (event) => {
-                openNewsModal(event.datum.cluster_id);
-              },
-            },          
-
-        gradient: false,
-        nodePadding: 2,
-        sizeKey: 'importance',
-        tileStroke: 'white',
-        tileStrokeWidth: 1,
-        labelShadow: {
-          enabled: false,
-        },
-        groupFill: 'transparent',
-        title: {
-          color: 'black'
-        },
-        subtitle: {
-          color: 'black',
-        },
-        labels: {
-          value: {
-            name: 'Importance',
-            formatter: (params) => `${params.datum.importance.toFixed(3)}`,
+    setOptions({
+      data: treemapData,    
+      series: [
+        {
+          type: 'treemap',
+          labelKey: 'word',
+  
+          listeners: {
+                nodeClick: (event) => {
+                  openNewsModal(event.datum.cluster_id);
+                },
+              },          
+  
+          gradient: false,
+          nodePadding: 2,
+          sizeKey: 'importance',
+          tileStroke: 'white',
+          tileStrokeWidth: 1,
+          labelShadow: {
+            enabled: false,
+          },
+          groupFill: 'transparent',
+          title: {
+            color: 'black'
+          },
+          subtitle: {
+            color: 'black',
+          },
+          labels: {
+            value: {
+              name: 'Importance',
+              formatter: (params) => `${params.datum.importance.toFixed(3)}`,
+            },
+          },
+          groupStrokeWidth: 0,
+          highlightGroups: false,
+          highlightStyle: {
+            text: {
+              color: undefined,
+            },
+          },
+          formatter: ({ depth, parent, highlighted }) => {
+            if (depth < 2) {
+              return {};
+            }
+            const color_this_cluster = loaded ? clusterColors[parent.name.split(' ')[1]] : null;
+            const fill = color_this_cluster;
+            //   parent.name === 'Cluster 0'
+            //     ? 'rgb(64, 172, 64)'
+            //     : 'rgb(32, 96, 224)';
+            const stroke = highlighted ? 'black' : 'white';
+            return { fill, stroke };
           },
         },
-        groupStrokeWidth: 0,
-        highlightGroups: false,
-        highlightStyle: {
-          text: {
-            color: undefined,
-          },
-        },
-        formatter: ({ depth, parent, highlighted }) => {
-          if (depth < 2) {
-            return {};
-          }
-          const color_this_cluster = loaded ? clusterColors[parent.name.split(' ')[1]] : null;
-          const fill = color_this_cluster;
-          //   parent.name === 'Cluster 0'
-          //     ? 'rgb(64, 172, 64)'
-          //     : 'rgb(32, 96, 224)';
-          const stroke = highlighted ? 'black' : 'white';
-          return { fill, stroke };
-        },
-      },
-    ],
-    title: {
-      text: 'Clusters and their defining words',
-    }
+      ],
+      title: {
+        text: 'Clusters and their defining words',
+      }
+        // },
+      // subtitle: {
+      //   text: 'in millions US dollars',
       // },
-    // subtitle: {
-    //   text: 'in millions US dollars',
-    // },
-  };
-
-  console.log('From treemap: ',options);
+    });
+    setReady(true);
+  }, [treemapData]);
 
   return(
     <div style={{opacity: vague ? '0.0': '1.0', height: '500px', width: '100%'}}>
-      {loaded ? <AgChartsReact options={options} /> : <div>Waiting for API...</div>}
+      {loaded && ready ? <AgChartsReact options={options} /> : <div>Waiting for API...</div>}
     </div>
   );    
 };
