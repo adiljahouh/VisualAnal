@@ -7,9 +7,11 @@ import {
   InputLabel,
   SelectChangeEvent,
   Input,
-  Grid, Typography, CircularProgress,
+  Grid,
+  Typography,
+  CircularProgress,
 } from "@mui/material";
-import moment from 'moment';
+import moment from "moment";
 
 interface SankeyProps {
   date: {
@@ -59,11 +61,16 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       width: this.state.selectedWidth,
       start: moment(this.props.date.start).toISOString(),
       end: moment(this.props.date.end).toISOString(),
-    }
+    };
 
-    const url = 'http://localhost:5000/mails?' + Object.keys(queryParams)
-      .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]))
-      .join('&');
+    const url =
+      "http://localhost:5000/mails?" +
+      Object.keys(queryParams)
+        .map(
+          (key) =>
+            encodeURIComponent(key) + "=" + encodeURIComponent(queryParams[key])
+        )
+        .join("&");
 
     fetch(url)
       .then((response) => response.json())
@@ -71,18 +78,27 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
   }
 
   fetchSankeyMailNames() {
-    const queryParams: { [key: string]: string | number; start: string, end: string } = {
+    const queryParams: {
+      [key: string]: string | number;
+      start: string;
+      end: string;
+    } = {
       start: moment(this.props.date.start).toISOString(),
       end: moment(this.props.date.end).toISOString(),
-    }
+    };
 
-    const url = 'http://localhost:5000/mails/names?' + Object.keys(queryParams)
-      .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]))
-      .join('&');
+    const url =
+      "http://localhost:5000/mails/names?" +
+      Object.keys(queryParams)
+        .map(
+          (key) =>
+            encodeURIComponent(key) + "=" + encodeURIComponent(queryParams[key])
+        )
+        .join("&");
 
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => this.setState({ names: data }));
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => this.setState({ names: data }));
   }
 
   componentDidMount() {
@@ -99,8 +115,9 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
   }
 
   handleNameChange = (event: SelectChangeEvent<string>) => {
-    this.setState({ selectedName: event.target.value });
-    this.fetchSankeyMailData()
+    this.setState({ selectedName: event.target.value }, () => {
+      this.fetchSankeyMailData();
+    });
   };
 
   handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +132,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
   };
 
   handleWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value, 10)
+    const value = parseInt(event.target.value, 10);
     if (isNaN(value)) {
       // Handle error case where value is not an integer
     } else {
@@ -130,7 +147,8 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       sankey: {
         node: { colors: ["#a6cee3", "#b2df8a", "#fb9a99", "#fdbf6f"] },
         link: {
-          colorMode: "gradient", colors: [
+          colorMode: "gradient",
+          colors: [
             "#a6cee3",
             "#b2df8a",
             "#fb9a99",
@@ -205,7 +223,8 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
                   data={this.state.sankeyData}
                   options={options}
                   width="100%"
-                  height="500px" />
+                  height="500px"
+                />
               ) : (
                 <Grid item>
                   <Typography variant="h6" align="center">
@@ -217,7 +236,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
           </Grid>
         )}
       </Grid>
-    )
+    );
   }
 }
 
