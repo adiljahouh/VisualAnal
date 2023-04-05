@@ -26,9 +26,24 @@ Useful to set debug to true in app.py.
 python app.py
 ```
 
-
 # Run Production
 Use gunicorn.
 ```
 gunicorn app:app
+```
+
+# Docker
+Building image.
+```
+docker build -t 2amv10-backend .
+```
+
+Running container.
+```
+docker run --rm --name 2amv10-backend -p 5000:8000 -d 2amv10-backend
+```
+
+Stopping container.
+```
+docker container stop 2amv10-backend
 ```
