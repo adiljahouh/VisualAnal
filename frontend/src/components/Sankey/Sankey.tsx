@@ -41,7 +41,7 @@ interface QueryParamsMail {
 class SankeyChart extends Component<SankeyProps, SankeyState> {
   constructor(props: SankeyProps) {
     super(props);
-
+    // Sankey data object, used to render the chart
     this.state = {
       sankeyData: [],
       names: [],
@@ -51,7 +51,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       fetchingAPI: true,
     };
   }
-
+  // API call to fetch data for the sankey chart
   fetchSankeyMailData() {
     this.setState({ fetchingAPI: true });
 
@@ -106,20 +106,20 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
     this.fetchSankeyMailNames();
     this.fetchSankeyMailData();
   }
-
+  // Fetch data from API based on date range and set sankeyData state
   componentDidUpdate(prevProps: SankeyProps) {
     if (prevProps.date !== this.props.date) {
       this.fetchSankeyMailNames();
       this.fetchSankeyMailData();
     }
   }
-
+  // Handle change of name select on frontend by fetching relevant data from API
   handleNameChange = (event: SelectChangeEvent<string>) => {
     this.setState({ selectedName: event.target.value }, () => {
       this.fetchSankeyMailData();
     });
   };
-
+  // Handle change of width input on frontend by fetching relevant data from API
   handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);
     if (isNaN(value)) {
@@ -130,7 +130,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       });
     }
   };
-
+  // Handle change of weight input on frontend by fetching relevant data from API
   handleWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);
     if (isNaN(value)) {
@@ -141,7 +141,7 @@ class SankeyChart extends Component<SankeyProps, SankeyState> {
       });
     }
   };
-
+  // Render the Sankey chart and selectors
   render() {
     const options = {
       sankey: {
