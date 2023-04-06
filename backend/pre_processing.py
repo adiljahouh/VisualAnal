@@ -5,14 +5,14 @@ import pandas as pd
 def preprocess_mails(path_input_mails='data/emailheaders.csv',
                      path_input_personal='data/EmployeeRecords.xlsx',
                      path_output='data/MailsClean.csv'):
-    """
-    Preprocesses the mails and saves them to a csv file to later "query" on.
+    """Preprocesses the mails and saves them to a csv file to later "query" on
             ---
         parameters:
             - path_input_mails: The path to the csv file containing the mails.
             - path_input_personal: The path to the excel file containing the personal data.
             - path_output: The path to the csv file to save the preprocessed mails to.
-        returns:
+
+        Returns:
             - None
 
     """

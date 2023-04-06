@@ -6,6 +6,18 @@ from nltk.tokenize import sent_tokenize
 
 
 def initialize_data():
+    """This function reads the articles and mails data from the CSV files and returns two preprocessed dataframes\
+    by reading the cleaned data from the CSV files.
+        ---
+        Parameters:
+
+            - None
+        Returns:
+
+            -  articles_df: A dataframe containing the articles data
+            -  mails_df: A dataframe containing the mails data
+
+    """
     articles_df = pd.read_csv('results/articles_clean.csv')
     articles_df['date'] = pd.to_datetime(articles_df['date'], errors='coerce')
     articles_df.dropna(inplace=True)
@@ -27,6 +39,20 @@ def initialize_data():
 
 
 def process(df, n_clusters=3, n_top=10, start=None, end=None):
+    """This function performs k-means clustering on the articles data and returns a list of clusters with their articles and top words.
+        ---
+        parameters:
+            - df: A dataframe containing the articles data
+            - n_clusters: The number of clusters to use
+            - n_top: The number of top words to return for each cluster
+            - start: The start date for the articles 
+            - end: The end date for the articles 
+
+        Returns:
+
+            - data: A dictionary of number of clusters, number of top words, and a list of a cluster object containing 
+            the words (with importance and frequency) and articles for each cluster
+    """
     if start != None:
         ts = pd.to_datetime(start).to_numpy()
         df = df[df['date'] >= ts]
@@ -85,6 +111,17 @@ def process(df, n_clusters=3, n_top=10, start=None, end=None):
 
 
 def summarize_text(content, n_sentences=3):
+    """This function takes a string of text as input and returns a summary of the text.
+        ---
+        Parameters:
+            - content: A string of text
+            - n_sentences: The n highest scoring number of sentences
+
+        Returns:
+
+            - summary: A summary of the text based on the n highest scoring sentences
+
+    """
     # Tokenize the content into sentences
     sentences = sent_tokenize(content)
 
@@ -110,6 +147,18 @@ def summarize_text(content, n_sentences=3):
 
 
 def score_words(content):
+    """This function takes a string of text as input and returns a list of dictionaries with each word and its corresponding\
+    TF-IDF score and sentiment score.
+        ---
+
+        Parameters:
+
+            - content: A string of text
+
+        Returns:
+
+            - scored_tokens: A list of dictionaries with each word and its corresponding TF-IDF score and sentiment score.
+    """
     # Create a TfidfVectorizer object
     tfidf = TfidfVectorizer()
 
@@ -143,6 +192,22 @@ def score_words(content):
 
 
 def get_articles(df, id=None, journal=None, title=None, start=None, end=None, ids=None):
+    """Returns a list of articles that match the given criteria.
+        ---
+
+        Parameters:
+            - df: The dataframe containing the articles
+            - id: The id of the article
+            - journal: The journal of the article
+            - title: The title of the article
+            - start: The start date of the articles
+            - end: The end date of the articles
+            - ids: A list of article ids
+
+        Returns:
+
+            - A list of articles that match the given criteria
+    """
     if ids != None:
         df = df[df['id'].isin(ids)]
         print('ids')
@@ -178,9 +243,23 @@ def get_articles(df, id=None, journal=None, title=None, start=None, end=None, id
 
 def filter_mails(df, weight=10, sender=['Sven Flecha'], width=4, data=None,
                  blacklist=[], start=None, end=None):
-    """
-    Returns a list of lists, where the mails sent from the people in the sender list are filtered by weight and are all between
+    """Returns a list of lists, where the mails sent from the people in the sender list are filtered by weight and are all between\
     start_date and end_date. Note that the only goal of this visualization is to show frequency of mails sent between people within a timezone.
+        ---
+        Parameters:
+
+            - df: pandas dataframe containing the mails
+            - weight: int, minimum weight of the edges to be shown
+            - sender: list of strings, names of the people whose mails are to be shown
+            - width: int, width of the sankey diagram beyond the first edge
+            - data: list of lists, data to be added to the sankey diagram which gets extended each recursive call
+            - blacklist: list of strings, names of the people whose mails are not to be shown since they are already shown somewhere in the diagram
+            - start_date: string, start date of the mails to be shown
+            - end_date: string, end date of the mails to be shown
+
+        Returns:
+
+            - value_list: list of lists, data to be added to the sankey diagram which gets extended each recursive call
     """
     if start != None:
         ts = pd.to_datetime(start).to_numpy()
@@ -215,6 +294,15 @@ def filter_mails(df, weight=10, sender=['Sven Flecha'], width=4, data=None,
 
 
 def get_mail_names(df, start=None, end=None):
+    """Returns a list of names of people who sent mails within the given time frame.
+        ---
+        Parameters:
+            - df: pandas dataframe containing the mails
+            - start: string, start date of the mails to be shown
+            - end: string, end date of the mails to be shown
+
+        Returns:
+            - list of names of people who sent mails within the given time frame"""
     if start != None:
         ts = pd.to_datetime(start).to_numpy()
         df = df[df['Date'] >= ts]
