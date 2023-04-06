@@ -1,8 +1,10 @@
 import React, { useState, useContext } from "react";
-import { ApiDataContext } from "../Context/ApiDataContext/ApiDataContext";
-import "../App.css";
+import { ApiDataContext } from "../../Context/ApiDataContext/ApiDataContext";
+import "../../App.css";
 
 const Counter = () => {
+/* Counter component. Used to control the number of clusters in the treemap.
+*/
   const { treemapData, new_cluster_data } = useContext(ApiDataContext);
 
   const num_clusters = 4;

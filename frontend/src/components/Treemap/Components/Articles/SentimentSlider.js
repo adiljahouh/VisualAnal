@@ -9,7 +9,12 @@ import { Button } from '@mui/material';
 function valuetext(value) {
   return `${value}`;
 }
+
 export default function SentimentSlider( {sentimentRange, setSentimentRange, handleApply} ) {
+/*
+Sentiment slider component. The selected range is used 
+by the ArticleViewer componet to filter articles by sentiment.
+*/
 
     const handleChange = (event, newValue) => {
       setSentimentRange(newValue);

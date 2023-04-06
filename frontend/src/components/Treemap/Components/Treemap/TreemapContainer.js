@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import NewsModal from './NewsModal';
+import NewsModal from '../Articles/NewsModal';
 import Treemap from './Treemap';
 import ClusterCounter from './ClusterCounter';
-import { ApiDataContextProvider } from '../Context/ApiDataContext/ApiDataContext';
+import { ApiDataContextProvider } from '../../Context/ApiDataContext/ApiDataContext';
 
 const TreemapContainer = () => {
     // Variable to control whether or not news articles are shown on screen
@@ -23,8 +23,7 @@ const TreemapContainer = () => {
 
     return (        
         // Depending on the state of the useState variables, open the news articles or 
-        // the treemap. Plan is to at some point have both and have a vague transparancy
-        // over the Treemap when the news is showing        
+        // the treemap.       
         <React.Fragment>
             <ApiDataContextProvider>
                 {openNews ? <NewsModal setOpen={setOpenNews} cluster={newsClusterToShow}/> : null}

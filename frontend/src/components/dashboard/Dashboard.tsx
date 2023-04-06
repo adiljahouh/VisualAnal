@@ -21,8 +21,8 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 
 // Tree Map
 import { DateContext } from "../Treemap/Context/DateContext/DateContext";
-import TreemapContainer from "../Treemap/Components/TreemapContainer";
-import NewDateRangePicker from "../Treemap/Components/NewDateRange";
+import TreemapContainer from "../Treemap/Components/Treemap/TreemapContainer";
+import NewDateRangePicker from "./NewDateRange";
 import Sankey from "../Sankey/Sankey";
 import { useContext } from "react";
 import IntroPage from "../Introduction/intro";
