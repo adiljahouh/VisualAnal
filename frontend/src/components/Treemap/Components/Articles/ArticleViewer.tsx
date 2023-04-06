@@ -150,7 +150,7 @@ class ArticleViewer extends Component<ArticleViewerProps, ArticleViewerState> {
       return words.map((word, index) => {
         const tfidfScore = wordScores[index]?.tfidf_score;
         if (tfidfScore && tfidfScore > wordScoreThreshold) {
-          return <span key={index} style={{ fontWeight: "bold" }}>{word} </span>;
+          return <span key={index}>{word} </span>;
         }
         return `${word} `;
       });
