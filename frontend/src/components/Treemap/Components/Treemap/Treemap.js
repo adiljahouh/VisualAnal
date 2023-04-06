@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AgChartsReact } from 'ag-charts-react';
-import { ApiDataContext } from '../Context/ApiDataContext/ApiDataContext';
+import { ApiDataContext } from '../../Context/ApiDataContext/ApiDataContext';
 
 const Treemap = ( { openNewsModal, vague } ) => {
     const [ready, setReady] = useState(false);
@@ -67,7 +67,7 @@ vague: boolean. controls whether to set opacity to 0.0 or at 1.0
           labels: {
             value: {
               name: 'Importance',
-              formatter: (params) => `${params.datum.importance.toFixed(3)}`,
+              formatter: (params) => `${params.datum.importance}`,
             },
           },
           groupStrokeWidth: 0,
@@ -83,9 +83,6 @@ vague: boolean. controls whether to set opacity to 0.0 or at 1.0
             }
             const color_this_cluster = loaded ? clusterColors[parent.name.split(' ')[1]] : null;
             const fill = color_this_cluster;
-            //   parent.name === 'Cluster 0'
-            //     ? 'rgb(64, 172, 64)'
-            //     : 'rgb(32, 96, 224)';
             const stroke = highlighted ? 'black' : 'white';
             return { fill, stroke };
           },
@@ -94,10 +91,6 @@ vague: boolean. controls whether to set opacity to 0.0 or at 1.0
       title: {
         text: 'Clusters and their defining words',
       }
-        // },
-      // subtitle: {
-      //   text: 'in millions US dollars',
-      // },
     });
     setReady(true);
   }, [treemapData]);
